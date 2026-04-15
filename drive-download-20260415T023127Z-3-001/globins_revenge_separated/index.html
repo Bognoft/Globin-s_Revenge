@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GLOBIN'S REVENGE — Goblin Typing RPG</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="globins-revenge.css" />
+        <audio id="bg-music" loop data-audio-type="music"></audio>
+        <audio id="battle-music" loop data-audio-type="music"></audio>
+    </head>
+    <body>
+        <div class="dungeon-bg"></div>
+        <div class="particles" id="particles"></div>
+        <div class="screen-flash" id="screen-flash"></div>
+
+        <!-- GLOBAL SETTINGS -->
+        <button class="settings-fab" id="settings-toggle" type="button">
+            ⚙ Settings
+        </button>
+        <div class="settings-panel hidden" id="settings-panel">
+            <div class="settings-row">
+                <label for="setting-mute">Mute</label>
+                <input id="setting-mute" type="checkbox" />
+            </div>
+            <div class="settings-row">
+                <label for="setting-master">Master</label>
+                <input
+                    id="setting-master"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="100"
+                />
+                <span class="settings-val" id="setting-master-val">100%</span>
+            </div>
+            <div class="settings-row">
+                <label for="setting-music">Music</label>
+                <input
+                    id="setting-music"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="100"
+                />
+                <span class="settings-val" id="setting-music-val">100%</span>
+            </div>
+        </div>
+
+        <!-- TITLE -->
+        <div class="screen" id="title-screen">
+            <div class="title-logo">
+                <img
+                    src="../Graphics/Logo/Main Logo.png"
+                    alt="Globin's Revenge Logo"
+                    style="max-width: 500px; width: 100%; height: auto"
+                />
+            </div>
+            <span class="title-goblin"></span>
+            <p class="title-tagline">
+                The smallest goblin. The biggest grudge.<br /><em
+                    >Type or be trampled.</em
+                >
+            </p>
+            <button class="btn-start" id="btn-start">Begin the Tale</button>
+        </div>
+
+        <!-- INTRO -->
+        <div class="screen hidden" id="intro-screen">
+            <div class="story-panel">
+                <div class="story-chapter" id="story-chapter"></div>
+                <div
+                    class="story-visual-container"
+                    style="padding: 0; overflow: hidden"
+                >
+                    <img
+                        id="story-visual-img"
+                        src="../Graphics/Story Novel Visuals/ACT 1.png"
+                        alt="Story Visual"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            display: block;
+                        "
+                    />
+                </div>
+                <div class="story-scene" id="story-scene"></div>
+                <div class="story-nav">
+                    <button class="btn-story btn-story-skip" id="btn-skip">
+                        Skip
+                    </button>
+                    <div class="story-dots" id="story-dots"></div>
+                    <button
+                        class="btn-story btn-story-next"
+                        id="story-next-btn"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU -->
+        <div class="screen hidden" id="menu-screen">
+            <div class="menu-panel">
+                <div class="menu-kicker">Camp Menu</div>
+                <div class="menu-title">Globin's Revenge</div>
+                <p class="menu-copy">
+                    The story has begun. Choose what Globin does next.
+                </p>
+                <div class="menu-actions">
+                    <button
+                        class="btn-menu btn-menu-primary"
+                        id="btn-adventure"
+                    >
+                        Start Adventure
+                    </button>
+                    <button class="btn-menu btn-menu-secondary" id="btn-reread">
+                        Read Story Again
+                    </button>
+                    <button
+                        class="btn-menu btn-menu-secondary"
+                        id="btn-to-title"
+                    >
+                        ↩ Back to Title
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WORLD MAP -->
+        <div class="screen hidden" id="map-screen">
+            <div class="map-header-area">
+                <div class="map-eyebrow">The World of Dunmora</div>
+                <div class="map-title-text">Globin's Grudge List</div>
+                <div class="map-sub" id="map-sub">
+                    Select a location to begin the next battle.
+                </div>
+                <div style="margin-top: 10px">
+                    <button class="btn-map-back" id="btn-back">Menu</button>
+                </div>
+            </div>
+            <div class="map-container">
+                <div class="world-map-image">
+                    <img
+                        src="../Graphics/World Map/World Map.png"
+                        alt="World Map of Dunmora"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                        "
+                    />
+                    <div id="map-nodes" class="map-nodes-overlay"></div>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div
+                            class="legend-dot"
+                            style="
+                                background: #22aa44;
+                                box-shadow: 0 0 4px #22aa44;
+                            "
+                        ></div>
+                        Defeated
+                    </div>
+                    <div class="legend-item">
+                        <div
+                            class="legend-dot"
+                            style="
+                                background: #c9a825;
+                                box-shadow: 0 0 6px #c9a825;
+                            "
+                        ></div>
+                        Available
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #333"></div>
+                        Locked
+                    </div>
+                    <div class="legend-item">
+                        <div
+                            class="legend-dot"
+                            style="
+                                background: #6600cc;
+                                box-shadow: 0 0 6px #6600cc;
+                            "
+                        ></div>
+                        BOSS
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-tooltip" id="map-tooltip">
+            <div class="tt-name" id="tt-name"></div>
+            <div class="tt-enemy" id="tt-enemy"></div>
+            <div class="tt-status" id="tt-status"></div>
+        </div>
+
+        <!-- BATTLE -->
+        <div class="screen hidden" id="battle-screen">
+            <div class="battle-scene-bg" id="battle-scene-bg"></div>
+
+            <div class="battle-content">
+                <div class="battle-header-row">
+                    <div class="battle-top">
+                        <div class="level-badge" id="level-badge">LEVEL 1</div>
+                        <button class="btn-map-back" id="btn-map">Map</button>
+                    </div>
+                </div>
+
+                <div class="battlefield">
+                    <div class="fighter-card player-card">
+                        <div class="fighter-name">GLOBIN</div>
+                        <div class="hp-bar-wrap">
+                            <div class="hp-label">
+                                <span>HP</span
+                                ><span id="player-hp-text">100 / 100</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div
+                                    class="hp-fill player"
+                                    id="player-hp-fill"
+                                    style="width: 100%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="sprite-panel">
+                            <div class="sprite-stage">
+                                <div
+                                    class="sprite-slot"
+                                    id="player-sprite-slot"
+                                >
+                                    <img
+                                        id="player-sprite-img"
+                                        alt="Player sprite placeholder"
+                                    />
+                                    <div
+                                        class="sprite-fallback"
+                                        id="player-sprite-fallback"
+                                    >
+                                        <div class="sprite-fallback-emoji">
+                                            🫛
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fighter-stats">
+                            <div class="stat-item">
+                                ATK: <span id="player-atk">—</span>
+                            </div>
+                            <div class="stat-item">
+                                DEF: <span id="player-def">—</span>
+                            </div>
+                            <div class="stat-item">
+                                WPM: <span id="player-wpm">0</span>
+                            </div>
+                            <div class="stat-item">
+                                ACC: <span id="player-acc">100%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vs-area">
+                        <div class="combat-phase waiting" id="combat-phase">
+                            WAITING
+                        </div>
+                        <div class="vs-text">VS</div>
+                    </div>
+
+                    <div class="fighter-card enemy-card" id="enemy-card">
+                        <div class="fighter-name" id="enemy-name">ENEMY</div>
+                        <div class="hp-bar-wrap">
+                            <div class="hp-label">
+                                <span>HP</span
+                                ><span id="enemy-hp-text">80 / 80</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div
+                                    class="hp-fill"
+                                    id="enemy-hp-fill"
+                                    style="width: 100%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="sprite-panel">
+                            <div class="sprite-stage">
+                                <div class="sprite-slot" id="enemy-sprite-slot">
+                                    <img
+                                        id="enemy-sprite-img"
+                                        alt="Enemy sprite placeholder"
+                                    />
+                                    <div
+                                        class="sprite-fallback"
+                                        id="enemy-sprite-fallback"
+                                    >
+                                        <div
+                                            class="sprite-fallback-emoji"
+                                            id="enemy-fallback-emoji"
+                                        >
+                                            👺
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fighter-stats">
+                            <div class="stat-item">
+                                ATK: <span id="enemy-atk">—</span>
+                            </div>
+                            <div class="stat-item">
+                                DEF: <span id="enemy-def">—</span>
+                            </div>
+                            <div class="stat-item">
+                                LVL: <span id="enemy-level">1</span>
+                            </div>
+                            <div class="stat-item">
+                                TYPE: <span id="enemy-type">—</span>
+                            </div>
+                        </div>
+                        <div class="enemy-ability" id="enemy-ability"></div>
+                    </div>
+                </div>
+
+                <div class="battle-log-area">
+                    <div class="battle-log" id="battle-log"></div>
+                    <div class="typing-stats-panel">
+                        <div class="stats-title">⚡ Combat Stats</div>
+                        <div class="live-stat">
+                            <div class="live-stat-label">WPM</div>
+                            <div class="live-stat-val" id="stat-wpm">0</div>
+                        </div>
+                        <div class="live-stat">
+                            <div class="live-stat-label">ACCURACY</div>
+                            <div class="live-stat-val" id="stat-acc">—</div>
+                        </div>
+                        <div class="acc-bar-wrap">
+                            <div
+                                class="acc-bar-fill"
+                                id="acc-bar"
+                                style="width: 100%; background: #22aa44"
+                            ></div>
+                        </div>
+                        <div class="live-stat">
+                            <div class="live-stat-label">ERRORS</div>
+                            <div class="live-stat-val bad" id="stat-errors">
+                                0
+                            </div>
+                        </div>
+                        <div class="live-stat">
+                            <div class="live-stat-label">DAMAGE</div>
+                            <div class="live-stat-val neutral" id="stat-dmg">
+                                —
+                            </div>
+                        </div>
+                        <div class="live-stat">
+                            <div class="live-stat-label">BLOCK</div>
+                            <div class="live-stat-val" id="stat-block">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-area-wrap">
+                    <div class="typing-prompt" id="typing-prompt">
+                        🗡 TYPE TO ATTACK
+                    </div>
+                    <div class="timer-row">
+                        <span class="timer-icon">⏱</span>
+                        <div class="timer-track">
+                            <div
+                                class="timer-fill"
+                                id="timer-fill"
+                                style="width: 100%"
+                            ></div>
+                        </div>
+                        <span class="timer-display" id="timer-display"
+                            >1:00</span
+                        >
+                    </div>
+                    <div class="typing-text-display" id="typing-display">
+                        <span id="typing-spans"></span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div
+                            class="progress-bar-fill"
+                            id="progress-bar"
+                            style="width: 0%"
+                        ></div>
+                    </div>
+                    <input
+                        type="text"
+                        class="hidden-input"
+                        id="hidden-input"
+                        autocomplete="off"
+                        autocorrect="off"
+                        spellcheck="false"
+                    />
+                    <div class="submit-bar">
+                        <button
+                            class="btn-action btn-attack"
+                            id="btn-submit"
+                            disabled
+                        >
+                            ⚔ Strike!
+                        </button>
+                        <div class="submit-hint" id="submit-hint">
+                            Finish typing the paragraph to strike
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="screen hidden" id="results-screen">
+            <div id="result-overlay">
+                <div class="result-card">
+                    <span class="result-icon" id="result-icon">⚔</span>
+                    <div class="result-title victory" id="result-title">
+                        VICTORY!
+                    </div>
+                    <div
+                        id="end-message"
+                        style="
+                            text-align: center;
+                            margin: 20px 0;
+                            font-size: 20px;
+                            font-weight: bold;
+                        "
+                    ></div>
+                    <div class="result-subtitle" id="result-subtitle"></div>
+                    <div class="result-stats">
+                        <div class="result-stat">
+                            <div class="result-stat-label">WPM</div>
+                            <div class="result-stat-value" id="res-wpm">0</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-stat-label">Accuracy</div>
+                            <div class="result-stat-value" id="res-acc">0%</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-stat-label">Damage Dealt</div>
+                            <div class="result-stat-value" id="res-dmg">0</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-stat-label">Total Errors</div>
+                            <div class="result-stat-value" id="res-errors">
+                                0
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-btns" id="result-btns"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="js/main.js"></script>
+    </body>
+</html>
